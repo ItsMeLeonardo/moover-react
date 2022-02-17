@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 
 import { Input, Loading, Tooltip } from "@nextui-org/react";
 import { Search } from "react-iconly";
 
 import KeywordResult from "./KeywordResults";
 
-export default function SearchInput({
+function SearchInput({
   label = "Min 3 characters",
   loading = false,
   results,
@@ -15,8 +15,9 @@ export default function SearchInput({
 
   const handleChange = (event) => {
     const keyword = event.target.value;
-    if (!keyword) return;
+    if (!keyword) return setValue("");
     setValue(keyword);
+
     if (keyword.length < 3) return;
     onChange(value);
   };
@@ -43,3 +44,5 @@ export default function SearchInput({
     </Tooltip>
   );
 }
+
+export default memo(SearchInput);
