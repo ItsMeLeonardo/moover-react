@@ -1,4 +1,5 @@
 import { NextUIProvider } from "@nextui-org/react";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 import Layout from "../components/layout.js";
 import "../styles/globals.css";
