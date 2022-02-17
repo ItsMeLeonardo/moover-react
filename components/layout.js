@@ -6,7 +6,12 @@ export default function Layout({ children }) {
     <Container
       md
       className="container"
-      css={{ p: ".5rem", background: "$gray900", minHeight: "100vh" }}
+      css={{
+        p: ".5rem",
+        background: "$gray900",
+        minHeight: "100vh",
+        "@smMax": { mb: "$24" },
+      }}
     >
       <Navbar />
       <main>{children}</main>
