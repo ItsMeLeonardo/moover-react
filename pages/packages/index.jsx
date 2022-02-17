@@ -7,12 +7,12 @@ export default function Packages() {
   return (
     <>
       <h1>Packages </h1>
-      <Grid.Container>
-        <Grid xs={12} sm={3}>
+      <Grid.Container gap={2}>
+        <Grid xs={12} sm={3} css={{ overflow: "auto", py: ".5rem", maxH: 400 }}>
           <PackagesList />
         </Grid>
         <Grid xs={12} sm={9}>
-          <Map />
+          <Map height="400px" />
         </Grid>
       </Grid.Container>
       <style jsx>{``}</style>

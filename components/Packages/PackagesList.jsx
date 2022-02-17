@@ -13,6 +13,8 @@ const packageListCss = {
     alignItems: "center",
     gap: ".5rem",
     overflow: "auto",
+    height: "100%",
+    overflow: "auto",
   },
 };
 
@@ -35,7 +37,7 @@ const packageItemCss = {
 export default function PackagesList() {
   return (
     <>
-      <Col>
+      <Col css={{ overflow: "hidden", p: ".5rem 0" }}>
         <form>
           <Input
             placeholder="Find your package"
@@ -51,7 +53,7 @@ export default function PackagesList() {
         </form>
         <Spacer y={1.5} />
         <Col css={packageListCss}>
-          {[...new Array(5)].map((_, i) => (
+          {[...new Array(8)].map((_, i) => (
             <Row
               key={i}
               align="center"
