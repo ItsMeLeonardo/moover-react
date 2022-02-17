@@ -1,5 +1,12 @@
 import { Button, Text } from "@nextui-org/react";
 
+const textResultCss = {
+  bg: "transparent",
+  maxW: "20ch",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+};
+
 export default function KeywordResult({ results, label } = {}) {
   if (results?.length === 0 || !results) {
     return (
@@ -18,7 +25,7 @@ export default function KeywordResult({ results, label } = {}) {
           key={result.id}
           css={{ bg: "$accents1", "&:hover": { bg: "$gray900" } }}
         >
-          <Text h6 css={{ bg: "transparent" }}>
+          <Text h6 css={textResultCss}>
             {result[label]}
           </Text>
         </Button>
