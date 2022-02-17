@@ -1,10 +1,12 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Col } from "@nextui-org/react";
+
+import mapboxgl from "!mapbox-gl";
 
 import InputSearchWithResults from "../InputSearchWithResults";
 import { useMap } from "../../hooks/useMap";
+import { debounce } from "../../utils/debounce";
 
-import mapboxgl from "!mapbox-gl";
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 export default function Map({ height }) {
@@ -25,9 +27,12 @@ export default function Map({ height }) {
     });
   }, []);
 
-  const onChange = (value) => {
-    findLocation({ keyword: value });
-  };
+  const onChange = useCallback(
+    debounce((value) => {
+      findLocation({ keyword: value });
+    }, 500),
+    []
+  );
 
   return (
     <>

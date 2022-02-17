@@ -1,5 +1,3 @@
-import { useCallback } from "react";
-
 import { useNetworkState } from "./useNetworkState";
 import { findPlaces } from "../services/mapService";
 
@@ -7,7 +5,7 @@ export const useMap = () => {
   const { meta, actions, data } = useNetworkState();
   const { error, isLoading } = meta;
 
-  const findLocation = useCallback(({ keyword = "" } = {}) => {
+  const findLocation = ({ keyword = "" } = {}) => {
     actions.startRequest();
 
     findPlaces(keyword)
@@ -20,7 +18,7 @@ export const useMap = () => {
         actions.endRequest();
       })
       .finally(() => actions.endRequest());
-  }, []);
+  };
 
   return { isLoading, error, data, findLocation };
 };
