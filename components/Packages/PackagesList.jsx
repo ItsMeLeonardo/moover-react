@@ -1,89 +1,119 @@
-import { Input, Avatar, Col, Spacer, Row, Text } from "@nextui-org/react";
+import { useState } from "react";
+import { Input, Avatar, Col, Spacer, Text, Grid, Row } from "@nextui-org/react";
+import { TimeSquare } from "react-iconly";
 
-const defaultAvatar =
-  "https://i.pinimg.com/236x/29/68/3b/29683b54520b500a531ad18a4534c85e.jpg";
-
-const packageListCss = {
-  display: "flex",
-  gap: "1rem",
-  width: "100%",
-  justifyContent: "flex-start",
-  "@sm": {
-    flexDirection: "column",
-    alignItems: "center",
-    gap: ".5rem",
-    overflow: "auto",
-    height: "100%",
-    overflow: "auto",
-  },
-};
+import { useMapDirection } from "../../hooks/useMapDirection";
+import { formatDate } from "../../utils/formatDate";
+import HeaderTable from "./HeaderTable";
 
 const packageItemCss = {
   bg: "$accents2",
   p: ".75rem",
-  borderRadius: "1rem",
   cursor: "pointer",
-  width: "auto",
-  display: "flex",
-  flexDirection: "column",
-  gap: ".5rem",
+  borderRadius: "1rem",
   "@sm": {
-    w: "95%",
-    flexDirection: "row",
     p: ".5rem",
   },
 };
 
-export default function PackagesList() {
+export default function PackagesList({ orders = [] } = {}) {
+  const [filteredOrders, setFilteredOrders] = useState(orders);
+  const { getDirections } = useMapDirection();
+
+  const handleChange = (event) => {
+    const keyword = event.target.value;
+    if (!keyword) return setFilteredOrders(orders);
+    const filtered = orders.filter(({ client }) => {
+      const email = client.email.toLowerCase();
+      return email.includes(keyword.toLowerCase());
+    });
+    setFilteredOrders(filtered);
+  };
+
   return (
     <>
-      <Col css={{ overflow: "hidden", p: ".5rem 0" }}>
-        <form>
-          <Input
-            placeholder="Find your package"
-            type="search"
-            bordered
-            color="secondary"
-            helperText="min 3 characters"
-            name="keyword"
-            id="SearchInput"
-            arial-label="Search"
-            css={{ bg: "#333", w: "95%", mx: "auto" }}
-          />
-        </form>
+      <Col css={{ overflow: "hidden", p: ".5rem .25rem" }}>
+        <Input
+          placeholder="Find by email"
+          type="search"
+          bordered
+          color="secondary"
+          helperText="min 3 characters"
+          name="keyword"
+          id="SearchInput"
+          arial-label="Search"
+          css={{ bg: "#333", w: "100%", maxW: "420px" }}
+          onChange={handleChange}
+        />
         <Spacer y={1.5} />
-        <Col css={packageListCss}>
-          {[...new Array(8)].map((_, i) => (
-            <Row
-              key={i}
-              align="center"
-              justify="space-around"
-              css={packageItemCss}
-            >
-              <Avatar size="md" src={defaultAvatar} />
-              <Text
-                h6
-                size="14px"
-                css={{
-                  display: "none",
-                  "@sm": {
-                    display: "block",
-                  },
-                }}
+        <HeaderTable />
+        <Spacer y={0.25} />
+        <section>
+          {filteredOrders.map(
+            ({ id, client, orderDate, from, to, orderStatus, packageSize }) => (
+              <Grid.Container
+                key={id}
+                css={packageItemCss}
+                onClick={() =>
+                  getDirections({ from: from.center, to: to.center })
+                }
               >
-                User name
-              </Text>
-              <Text size="12px">15hs</Text>
-            </Row>
-          ))}
-        </Col>
+                {/* Client */}
+                <Grid xs={2} sm={2} md={2} justify="center" alignItems="center">
+                  <Row gap={1} align="center">
+                    <Avatar size="md" src={client.profile} />
+                    <Text
+                      h6
+                      size="14px"
+                      css={{ display: "none", "@sm": { display: "block" } }}
+                    >
+                      {client.email}
+                    </Text>
+                  </Row>
+                </Grid>
+                {/* Date */}
+                <Grid xs={0} sm={2} md={2} justify="center" alignItems="center">
+                  <Text size="12px" css={{ letterSpacing: ".025rem" }}>
+                    {formatDate(new Date(orderDate))}
+                  </Text>
+                </Grid>
+                {/* From */}
+                <Grid xs={4} sm={3} md={2} justify="center" alignItems="center">
+                  <Text size="12px" css={{}}>
+                    {from.text}
+                  </Text>
+                </Grid>
+                {/* To */}
+                <Grid xs={4} sm={3} md={2} justify="center" alignItems="center">
+                  <Text size="12px" css={{}}>
+                    {to.text}
+                  </Text>
+                </Grid>
+                {/* Status */}
+                <Grid xs={2} sm={2} md={2} justify="center" alignItems="center">
+                  <Text size="12px" css={{}}>
+                    {orderStatus}
+                  </Text>
+                </Grid>
+                {/* Size */}
+                <Grid xs={0} sm={0} md={2} justify="center" alignItems="center">
+                  <Text size="12px" css={{}}>
+                    {packageSize}
+                  </Text>
+                </Grid>
+              </Grid.Container>
+            )
+          )}
+        </section>
       </Col>
       <style jsx>{`
-        form {
+        section {
           width: 100%;
           display: flex;
-          justify-content: center;
           align-items: center;
+          flex-direction: column;
+          justify-content: center;
+          gap: 0.75rem;
         }
       `}</style>
     </>
