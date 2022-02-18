@@ -12,6 +12,7 @@ function SearchInput({
   onChange,
   onClick,
   propToDisplayResult,
+  clearResultsAfterClick,
 } = {}) {
   const [value, setValue] = useState(null);
 
@@ -19,9 +20,13 @@ function SearchInput({
     const keyword = event.target.value;
     if (!keyword) return setValue("");
     setValue(keyword);
-
     if (keyword.length < 3) return;
     onChange(value);
+  };
+
+  const handleClick = (result) => {
+    onClick(result);
+    if (clearResultsAfterClick) setValue("");
   };
 
   return (
@@ -31,7 +36,7 @@ function SearchInput({
       placement="bottom"
       content={
         <KeywordResult
-          onClick={onClick}
+          onClick={handleClick}
           results={results}
           label={propToDisplayResult}
         />
