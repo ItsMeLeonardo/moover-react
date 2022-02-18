@@ -8,7 +8,7 @@ import { debounce } from "../../utils/debounce";
 
 const [lng, lat] = [-76.8333, -12];
 
-export default function Map({ height, searcher } = {}) {
+export default function Map({ height, searcher, onResultClick = null } = {}) {
   const { data, isLoading, findLocation } = useFindPlace();
 
   const mapContainer = useRef(null);
@@ -25,6 +25,16 @@ export default function Map({ height, searcher } = {}) {
     []
   );
 
+  const onClick = useCallback(
+    (result) => {
+      flyToPlace(result.center);
+
+      if (!onResultClick) return;
+      onResultClick(result);
+    },
+    [onResultClick]
+  );
+
   return (
     <>
       <Col css={{ position: "relative" }}>
@@ -34,7 +44,8 @@ export default function Map({ height, searcher } = {}) {
               onChange={onChange}
               results={data}
               loading={isLoading}
-              onClick={flyToPlace}
+              onClick={onClick}
+              propToDisplayResult="place_name"
             />
           </div>
         )}

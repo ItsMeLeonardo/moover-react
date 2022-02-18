@@ -24,7 +24,7 @@ export default function KeywordResult({ results, label, onClick } = {}) {
         <Button
           key={result.id}
           css={{ bg: "$accents1", "&:hover": { bg: "$gray900" } }}
-          onClick={() => onClick(result.center)}
+          onClick={() => onClick(result)}
         >
           <Text h6 css={textResultCss}>
             {result[label]}

@@ -11,6 +11,7 @@ function SearchInput({
   results,
   onChange,
   onClick,
+  propToDisplayResult,
 } = {}) {
   const [value, setValue] = useState(null);
 
@@ -29,7 +30,11 @@ function SearchInput({
       visible={value?.length >= 3}
       placement="bottom"
       content={
-        <KeywordResult onClick={onClick} results={results} label="place_name" />
+        <KeywordResult
+          onClick={onClick}
+          results={results}
+          label={propToDisplayResult}
+        />
       }
     >
       <Input
