@@ -5,6 +5,6 @@ const clientApi = axios.create({
 });
 
 export const getClientsByEmail = async (email) => {
-  const res = await clientApi.get(`?email=${email}`);
+  const res = await clientApi.get(`/${email}`);
   return res.data;
 };
