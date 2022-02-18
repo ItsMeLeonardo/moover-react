@@ -1,8 +1,27 @@
-import { Collapse, Grid, Text, Col, Spacer, Input } from "@nextui-org/react";
-
+import { useState } from "react";
+import {
+  Collapse,
+  Grid,
+  Text,
+  Col,
+  Spacer,
+  Input,
+  Row,
+  Avatar,
+} from "@nextui-org/react";
 import { Calendar } from "react-iconly";
 
+import InputSearchWithResults from "../InputSearchWithResults";
+import { useClients } from "../../hooks/useClients";
+
 export function DeliveryData() {
+  const { isLoading, data, error, getClients } = useClients();
+
+  const [client, setClient] = useState(null);
+  const handleChange = (value) => {
+    getClients({ email: value });
+  };
+
   return (
     <Collapse title="Delivery data" arrowIcon={<Calendar />} id="delivery-data">
       <Grid.Container gap={2} alignItems="center" justify="center">
@@ -30,13 +49,25 @@ export function DeliveryData() {
               Find your client
             </Text>
             <Spacer y={0.5} />
-            <Input
-              width="100%"
-              type="text"
-              clearable
-              placeholder="john doe"
-              id="client"
+            <InputSearchWithResults
+              onChange={handleChange}
+              loading={isLoading}
+              results={data?.clients || []}
+              propToDisplayResult="email"
+              onClick={setClient}
+              clearResultsAfterClick
             />
+            {client && (
+              <Row align="center" css={{ gap: ".5rem" }}>
+                <Avatar src={client.profile} square />
+                <Col>
+                  <Text h5 weight="Bold">
+                    {client.name}
+                  </Text>
+                  <Text h6>{client.email}</Text>
+                </Col>
+              </Row>
+            )}
           </Col>
         </Grid>
       </Grid.Container>
