@@ -52,6 +52,8 @@ function SearchInput({
         id="SearchInput"
         arial-label="Search"
         css={{ bg: "#333" }}
+        onKeyPress={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
         contentRight={loading ? <Loading /> : <Search />}
       />
     </Tooltip>
