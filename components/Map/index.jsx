@@ -46,6 +46,7 @@ export default function Map({ height, searcher, onResultClick = null } = {}) {
               loading={isLoading}
               onClick={onClick}
               propToDisplayResult="place_name"
+              clearResultsAfterClick
             />
           </div>
         )}
