@@ -1,24 +1,32 @@
-import { useNetworkState } from "./useNetworkState";
-import { findPlaces } from "../services/mapService";
+import { useRef, useEffect, useCallback } from "react";
 
-export const useMap = () => {
-  const { meta, actions, data } = useNetworkState();
-  const { error, isLoading } = meta;
+import mapboxgl from "!mapbox-gl";
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-  const findLocation = ({ keyword = "" } = {}) => {
-    actions.startRequest();
+export const useMap = ({ mapContainerRef, lat, lng, zoom = 15 } = {}) => {
+  const map = useRef(null);
 
-    findPlaces(keyword)
-      .then(({ features }) => {
-        actions.setRequestData(features);
-        actions.endRequest();
-      })
-      .catch((err) => {
-        actions.setErrorState(err.message);
-        actions.endRequest();
-      })
-      .finally(() => actions.endRequest());
-  };
+  useEffect(() => {
+    // initialize map only once
+    if (!mapContainerRef) return;
+    if (map.current) return;
+    map.current = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [lng, lat],
+      zoom,
+    });
 
-  return { isLoading, error, data, findLocation };
+    () => map.current.remove();
+  }, [mapContainerRef]);
+
+  const flyToPlace = useCallback((center, zoom = 15) => {
+    map.current.flyTo({
+      center,
+      essential: true,
+      zoom,
+    });
+  }, []);
+
+  return { map, flyToPlace };
 };

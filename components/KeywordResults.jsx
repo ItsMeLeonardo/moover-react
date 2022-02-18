@@ -7,7 +7,7 @@ const textResultCss = {
   textOverflow: "ellipsis",
 };
 
-export default function KeywordResult({ results, label } = {}) {
+export default function KeywordResult({ results, label, onClick } = {}) {
   if (results?.length === 0 || !results) {
     return (
       <Button disabled css={{ bg: "$accents1" }}>
@@ -24,6 +24,7 @@ export default function KeywordResult({ results, label } = {}) {
         <Button
           key={result.id}
           css={{ bg: "$accents1", "&:hover": { bg: "$gray900" } }}
+          onClick={() => onClick(result.center)}
         >
           <Text h6 css={textResultCss}>
             {result[label]}

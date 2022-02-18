@@ -12,14 +12,14 @@ export function ChooseRoutes() {
           <Grid xs={12} sm={6}>
             <Col>
               <Text h5>From</Text>
-              <Map height="320px" />
+              <Map height="320px" searcher />
             </Col>
           </Grid>
 
           <Grid xs={12} sm={6}>
             <Col>
               <Text h5>To</Text>
-              <Map height="320px" />
+              <Map height="320px" searcher />
             </Col>
           </Grid>
         </Grid.Container>

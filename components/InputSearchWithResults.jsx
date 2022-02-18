@@ -10,6 +10,7 @@ function SearchInput({
   loading = false,
   results,
   onChange,
+  onClick,
 } = {}) {
   const [value, setValue] = useState(null);
 
@@ -27,7 +28,9 @@ function SearchInput({
       trigger="" // this necessary to show tooltip when write a word
       visible={value?.length >= 3}
       placement="bottom"
-      content={<KeywordResult results={results} label="place_name" />}
+      content={
+        <KeywordResult onClick={onClick} results={results} label="place_name" />
+      }
     >
       <Input
         onChange={handleChange}

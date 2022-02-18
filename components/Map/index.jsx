@@ -1,31 +1,22 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useCallback } from "react";
 import { Col } from "@nextui-org/react";
 
-import mapboxgl from "!mapbox-gl";
-
 import InputSearchWithResults from "../InputSearchWithResults";
+import { useFindPlace } from "../../hooks/useFindPlace";
 import { useMap } from "../../hooks/useMap";
 import { debounce } from "../../utils/debounce";
 
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+const [lng, lat] = [-76.8333, -12];
 
-export default function Map({ height }) {
-  const { data, isLoading, findLocation } = useMap();
+export default function Map({ height, searcher } = {}) {
+  const { data, isLoading, findLocation } = useFindPlace();
+
   const mapContainer = useRef(null);
-  const map = useRef(null);
-  const [lng, setLng] = useState(-76.8);
-  const [lat, setLat] = useState(-11.9);
-  const [zoom, setZoom] = useState(9);
-
-  useEffect(() => {
-    if (map.current) return; // initialize map only once
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [lng, lat],
-      zoom: zoom,
-    });
-  }, []);
+  const { flyToPlace } = useMap({
+    mapContainerRef: isLoading ? null : mapContainer,
+    lng,
+    lat,
+  });
 
   const onChange = useCallback(
     debounce((value) => {
@@ -37,13 +28,16 @@ export default function Map({ height }) {
   return (
     <>
       <Col css={{ position: "relative" }}>
-        <div className="sidebar">
-          <InputSearchWithResults
-            onChange={onChange}
-            results={data}
-            loading={isLoading}
-          />
-        </div>
+        {searcher && (
+          <div className="sidebar">
+            <InputSearchWithResults
+              onChange={onChange}
+              results={data}
+              loading={isLoading}
+              onClick={flyToPlace}
+            />
+          </div>
+        )}
         <div ref={mapContainer} className="map-container" />
       </Col>
       <style jsx>{`
