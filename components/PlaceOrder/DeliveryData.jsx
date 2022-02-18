@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Collapse,
   Grid,
@@ -14,10 +13,34 @@ import { Calendar } from "react-iconly";
 import InputSearchWithResults from "../InputSearchWithResults";
 import { useClients } from "../../hooks/useClients";
 
-export function DeliveryData() {
+export function DeliveryData({ dispatch, actions, clientDefault }) {
   const { isLoading, data, error, getClients } = useClients();
 
-  const [client, setClient] = useState(null);
+  const selectClient = (client) => {
+    dispatch({
+      type: actions.CHOOSE_DELIVERY_DATA.CLIENT,
+      payload: client,
+    });
+  };
+
+  const selectTime = (event) => {
+    const value = event.target.value;
+    if (!value) return;
+    dispatch({
+      type: actions.CHOOSE_DELIVERY_DATA.TIME,
+      payload: value,
+    });
+  };
+
+  const selectDate = (event) => {
+    const value = event.target.value;
+    if (!value) return;
+    dispatch({
+      type: actions.CHOOSE_DELIVERY_DATA.DATE,
+      payload: value,
+    });
+  };
+
   const handleChange = (value) => {
     getClients({ email: value });
   };
@@ -31,7 +54,7 @@ export function DeliveryData() {
               Select your delivery time
             </Text>
             <Spacer y={0.5} />
-            <Input width="100%" type="time" id="time" />
+            <Input width="100%" type="time" id="time" onBlur={selectTime} />
           </Col>
         </Grid>
         <Grid xs={12} sm={3}>
@@ -40,7 +63,7 @@ export function DeliveryData() {
               Select your delivery date
             </Text>
             <Spacer y={0.5} />
-            <Input width="100%" type="date" id="date" />
+            <Input width="100%" type="date" id="date" onBlur={selectDate} />
           </Col>
         </Grid>
         <Grid xs={12} sm={3}>
@@ -54,17 +77,17 @@ export function DeliveryData() {
               loading={isLoading}
               results={data?.clients || []}
               propToDisplayResult="email"
-              onClick={setClient}
+              onClick={selectClient}
               clearResultsAfterClick
             />
-            {client && (
+            {clientDefault && (
               <Row align="center" css={{ gap: ".5rem" }}>
-                <Avatar src={client.profile} square />
+                <Avatar src={clientDefault.profile} squared />
                 <Col>
                   <Text h5 weight="Bold">
-                    {client.name}
+                    {clientDefault.name}
                   </Text>
-                  <Text h6>{client.email}</Text>
+                  <Text h6>{clientDefault.email}</Text>
                 </Col>
               </Row>
             )}
