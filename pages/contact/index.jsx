@@ -14,8 +14,8 @@ import {
 import { Search, Call } from "react-iconly";
 
 export default function Contact() {
-  const [clients, setClients] = useState();
-
+  const [clients, setClients] = useState([]);
+  const [keyword, setKeyword] = useState("");
   useEffect(() => {
     const baseUrl = globalThis.location.origin;
     const res = axios.get(`${baseUrl}/api/clients`);
@@ -26,13 +26,13 @@ export default function Contact() {
 
   const filterByEmail = (event) => {
     const email = event.target.value;
-    if (!email) return setClients(clients);
-    const clientFiltered = clients.filter((client) => {
-      const emailClient = client?.email.toLowerCase();
-      return emailClient.includes(email.toLowerCase());
-    });
-    setClients(clientFiltered);
+    if (!email) return setKeyword("");
+    setKeyword(email.toLowerCase());
   };
+
+  const clientsToShow = clients?.filter((client) => {
+    return client.email.toLowerCase().includes(keyword);
+  });
 
   return (
     <>
@@ -50,7 +50,7 @@ export default function Contact() {
           />
           <Spacer />
           <Grid.Container gap={1}>
-            {clients?.map(({ id, phone, email, profile }) => (
+            {clientsToShow?.map(({ id, phone, email, profile }) => (
               <Grid xs={12} sm={6} key={id}>
                 <Card clickable bordered css={{ overflow: "hidden", p: "0" }}>
                   <Card.Body>
