@@ -9,7 +9,7 @@ const ordersKeys = [
   { xs: 0, sm: 0, md: 2, name: "Size" },
 ];
 
-export default function HeaderTable() {
+export default function PackagesListHeader() {
   return (
     <Grid.Container>
       {ordersKeys.map(({ name, xs, sm, md }) => (

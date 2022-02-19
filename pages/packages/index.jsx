@@ -2,8 +2,6 @@ import axios from "axios";
 import { Grid } from "@nextui-org/react";
 
 import PackagesList from "../../components/Packages/PackagesList";
-import Map from "../../components/Map";
-
 export default function Packages({ orders }) {
   return (
     <>
@@ -19,7 +17,7 @@ export default function Packages({ orders }) {
 }
 
 export async function getStaticProps() {
-  const res = await axios.get("http://localhost:3000/api/orders");
+  const res = await axios.get(`${process.env.API_URL}/orders`);
   const { orders } = res.data;
   return {
     props: {

@@ -1,24 +1,16 @@
 import { useState } from "react";
-import { Input, Avatar, Col, Spacer, Text, Grid, Row } from "@nextui-org/react";
-import { TimeSquare } from "react-iconly";
+import { Input, Col, Spacer } from "@nextui-org/react";
 
 import { useMapDirection } from "../../hooks/useMapDirection";
-import { formatDate } from "../../utils/formatDate";
-import HeaderTable from "./HeaderTable";
 
-const packageItemCss = {
-  bg: "$accents2",
-  p: ".75rem",
-  cursor: "pointer",
-  borderRadius: "1rem",
-  "@sm": {
-    p: ".5rem",
-  },
-};
+import ModalToPolyline from "./ModalToPolyline";
+import PackagesListRow from "./PackageListRow";
+import PackagesListHeader from "./PackageListHeader";
 
 export default function PackagesList({ orders = [] } = {}) {
   const [filteredOrders, setFilteredOrders] = useState(orders);
-  const { getDirections } = useMapDirection();
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const { getDirections, data } = useMapDirection();
 
   const handleChange = (event) => {
     const keyword = event.target.value;
@@ -30,8 +22,20 @@ export default function PackagesList({ orders = [] } = {}) {
     setFilteredOrders(filtered);
   };
 
+  const handleClick = async ({ from, to }) => {
+    await getDirections({ from, to });
+    setIsOpenModal(true);
+  };
+
   return (
     <>
+      {data && (
+        <ModalToPolyline
+          visible={isOpenModal}
+          setVisible={setIsOpenModal}
+          coords={data[0].geometry.coordinates}
+        />
+      )}
       <Col css={{ overflow: "hidden", p: ".5rem .25rem" }}>
         <Input
           placeholder="Find by email"
@@ -46,64 +50,16 @@ export default function PackagesList({ orders = [] } = {}) {
           onChange={handleChange}
         />
         <Spacer y={1.5} />
-        <HeaderTable />
+        <PackagesListHeader />
         <Spacer y={0.25} />
         <section>
-          {filteredOrders.map(
-            ({ id, client, orderDate, from, to, orderStatus, packageSize }) => (
-              <Grid.Container
-                key={id}
-                css={packageItemCss}
-                onClick={() =>
-                  getDirections({ from: from.center, to: to.center })
-                }
-              >
-                {/* Client */}
-                <Grid xs={2} sm={2} md={2} justify="center" alignItems="center">
-                  <Row gap={1} align="center">
-                    <Avatar size="md" src={client.profile} />
-                    <Text
-                      h6
-                      size="14px"
-                      css={{ display: "none", "@sm": { display: "block" } }}
-                    >
-                      {client.email}
-                    </Text>
-                  </Row>
-                </Grid>
-                {/* Date */}
-                <Grid xs={0} sm={2} md={2} justify="center" alignItems="center">
-                  <Text size="12px" css={{ letterSpacing: ".025rem" }}>
-                    {formatDate(new Date(orderDate))}
-                  </Text>
-                </Grid>
-                {/* From */}
-                <Grid xs={4} sm={3} md={2} justify="center" alignItems="center">
-                  <Text size="12px" css={{}}>
-                    {from.text}
-                  </Text>
-                </Grid>
-                {/* To */}
-                <Grid xs={4} sm={3} md={2} justify="center" alignItems="center">
-                  <Text size="12px" css={{}}>
-                    {to.text}
-                  </Text>
-                </Grid>
-                {/* Status */}
-                <Grid xs={2} sm={2} md={2} justify="center" alignItems="center">
-                  <Text size="12px" css={{}}>
-                    {orderStatus}
-                  </Text>
-                </Grid>
-                {/* Size */}
-                <Grid xs={0} sm={0} md={2} justify="center" alignItems="center">
-                  <Text size="12px" css={{}}>
-                    {packageSize}
-                  </Text>
-                </Grid>
-              </Grid.Container>
-            )
-          )}
+          {filteredOrders.map((order) => (
+            <PackagesListRow
+              key={order.id}
+              onClick={handleClick}
+              order={order}
+            />
+          ))}
         </section>
       </Col>
       <style jsx>{`
