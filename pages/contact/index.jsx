@@ -17,7 +17,8 @@ export default function Contact() {
   const [clients, setClients] = useState();
 
   useEffect(() => {
-    const res = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/clients`);
+    const baseUrl = globalThis.location.origin;
+    const res = axios.get(`${baseUrl}/api/clients`);
     res.then(({ data }) => {
       setClients(data.clients);
     });

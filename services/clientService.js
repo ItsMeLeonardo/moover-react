@@ -1,10 +1,12 @@
 import axios from "axios";
 
-const clientApi = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/clients`,
-});
-
+/**
+ * @description - Find client by email
+ * @param {String} email a string representing the email of the client
+ * @returns {Promise<Array>} a promise with an array of clients that match the email
+ */
 export const getClientsByEmail = async (email) => {
-  const res = await clientApi.get(`/${email}`);
+  const baseUrl = globalThis.location.origin;
+  const res = await axios.get(`${baseUrl}/api/clients/${email}`);
   return res.data;
 };

@@ -9,7 +9,8 @@ export default function Packages() {
   const [packages, setPackages] = useState();
 
   useEffect(() => {
-    const res = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/orders`);
+    const baseUrl = globalThis.location.origin;
+    const res = axios.get(`${baseUrl}/api/orders`);
     res.then(({ data }) => {
       const { orders } = data;
       setPackages(orders);
