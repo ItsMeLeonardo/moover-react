@@ -26,7 +26,7 @@ export default function Contact() {
 
   const filterByEmail = (event) => {
     const email = event.target.value;
-    if (!email) return setClients(initialCLients);
+    if (!email) return setClients(clients);
     const clientFiltered = clients.filter((client) => {
       const emailClient = client?.email.toLowerCase();
       return emailClient.includes(email.toLowerCase());
