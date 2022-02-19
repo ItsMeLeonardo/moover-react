@@ -1,3 +1,4 @@
+import Head from "next/head";
 import axios from "axios";
 import { useState } from "react";
 import {
@@ -25,6 +26,9 @@ export default function Contact({ initialCLients } = {}) {
   };
   return (
     <>
+      <Head>
+        <title>Moover | Contact</title>
+      </Head>
       <section>
         <h2>Contact Client</h2>
         <div className="container">

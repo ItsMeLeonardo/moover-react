@@ -39,7 +39,7 @@ export default function Navbar() {
           <LinkNext href="/">
             <a>
               <Text
-                size={16}
+                size="1.35rem"
                 weight="bold"
                 css={{
                   textGradient: "$gradBlue",

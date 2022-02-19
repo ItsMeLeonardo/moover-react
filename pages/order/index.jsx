@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useReducer, useState } from "react";
 import { Grid, Text, Button, Spacer, Col } from "@nextui-org/react";
 
@@ -96,55 +97,60 @@ export default function Order() {
   };
 
   return (
-    <Grid.Container
-      gap={2}
-      justify="center"
-      alignItems="center"
-      css={{ maxW: "900px", mx: "auto" }}
-    >
-      <Grid xs={12}>
-        <Text h2 css={{ textAlign: "center", w: "100%" }}>
-          Place your order
-        </Text>
-      </Grid>
-      <Grid css={{ w: "100%" }}>
-        <DeliveryData
-          dispatch={dispatch}
-          actions={ACTIONS}
-          clientDefault={state?.client}
-        />
-      </Grid>
-
-      <Grid css={{ w: "100%" }}>
-        <ChooseSize dispatch={dispatch} actions={ACTIONS} />
-      </Grid>
-
-      <Grid css={{ w: "100%" }}>
-        <ChooseRoutes
-          dispatch={dispatch}
-          actions={ACTIONS}
-          defaultStartLocation={state?.from}
-          defaultEndLocation={state?.to}
-        />
-      </Grid>
-
-      <Col xs={12}>
-        <Button color="gradient" shadow onClick={validateOrder}>
-          Confirm
-        </Button>
-        <Spacer y={0.5} />
-        {error && (
-          <Text h6 color="error">
-            {error}
+    <>
+      <Head>
+        <title>Moover | Order</title>
+      </Head>
+      <Grid.Container
+        gap={2}
+        justify="center"
+        alignItems="center"
+        css={{ maxW: "900px", mx: "auto" }}
+      >
+        <Grid xs={12}>
+          <Text h2 css={{ textAlign: "center", w: "100%" }}>
+            Place your order
           </Text>
-        )}
-      </Col>
-      <ModalConfirm
-        state={state}
-        visible={isModalOpen}
-        setVisible={setIsModalOpen}
-        onConfirm={handleConfirm}
-      />
-    </Grid.Container>
+        </Grid>
+        <Grid css={{ w: "100%" }}>
+          <DeliveryData
+            dispatch={dispatch}
+            actions={ACTIONS}
+            clientDefault={state?.client}
+          />
+        </Grid>
+
+        <Grid css={{ w: "100%" }}>
+          <ChooseSize dispatch={dispatch} actions={ACTIONS} />
+        </Grid>
+
+        <Grid css={{ w: "100%" }}>
+          <ChooseRoutes
+            dispatch={dispatch}
+            actions={ACTIONS}
+            defaultStartLocation={state?.from}
+            defaultEndLocation={state?.to}
+          />
+        </Grid>
+
+        <Col xs={12}>
+          <Button color="gradient" shadow onClick={validateOrder}>
+            Confirm
+          </Button>
+          <Spacer y={0.5} />
+          {error && (
+            <Text h6 color="error">
+              {error}
+            </Text>
+          )}
+        </Col>
+        <ModalConfirm
+          state={state}
+          visible={isModalOpen}
+          setVisible={setIsModalOpen}
+          onConfirm={handleConfirm}
+        />
+      </Grid.Container>
+    </>
   );
 }
