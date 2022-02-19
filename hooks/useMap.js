@@ -3,6 +3,8 @@ import { useRef, useEffect, useCallback } from "react";
 import mapboxgl from "!mapbox-gl";
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
+const polylineId = "route";
+
 export const useMap = ({ mapContainerRef, lat, lng, zoom = 15 } = {}) => {
   const map = useRef(null);
 
@@ -28,5 +30,60 @@ export const useMap = ({ mapContainerRef, lat, lng, zoom = 15 } = {}) => {
     });
   }, []);
 
-  return { map, flyToPlace };
+  const removePolyline = useCallback(() => {
+    if (!map.current.getLayer(polylineId)) return;
+    map.current.removeLayer(polylineId);
+    map.current.removeSource(polylineId);
+  }, []);
+
+  const setPolyline = useCallback((coords) => {
+    map.current.on("load", () => {
+      removePolyline();
+      const start = coords[0];
+
+      const bounds = new mapboxgl.LngLatBounds(
+        [start[0], start[1]],
+        [start[0], start[1]]
+      );
+
+      // add each coords to bounds
+      coords.forEach((coord) => bounds.extend(coord));
+
+      map.current.fitBounds(bounds, {
+        padding: 50,
+      });
+
+      //polyline
+      const sourceData = {
+        type: "geojson",
+
+        data: {
+          type: "Feature",
+          properties: {},
+          geometry: {
+            type: "LineString",
+            coordinates: coords,
+          },
+        },
+      };
+
+      map.current.addSource(polylineId, sourceData);
+
+      map.current.addLayer({
+        id: polylineId,
+        type: "line",
+        source: polylineId,
+        layout: {
+          "line-cap": "round",
+          "line-join": "round",
+        },
+        paint: {
+          "line-color": "#333333",
+          "line-width": 4,
+        },
+      });
+    });
+  }, []);
+
+  return { map, flyToPlace, setPolyline, removePolyline };
 };

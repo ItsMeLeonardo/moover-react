@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import { Col } from "@nextui-org/react";
 
 import InputSearchWithResults from "../InputSearchWithResults";
@@ -8,15 +8,27 @@ import { debounce } from "../../utils/debounce";
 
 const [lng, lat] = [-76.8333, -12];
 
-export default function Map({ height, searcher, onResultClick = null } = {}) {
+export default function Map({
+  height,
+  searcher,
+  onResultClick = null,
+  coordsToPolyline,
+} = {}) {
   const { data, isLoading, findLocation } = useFindPlace();
 
   const mapContainer = useRef(null);
-  const { flyToPlace } = useMap({
+  const { flyToPlace, setPolyline, removePolyline } = useMap({
     mapContainerRef: isLoading ? null : mapContainer,
     lng,
     lat,
   });
+
+  useEffect(() => {
+    if (!coordsToPolyline) return;
+    setPolyline(coordsToPolyline);
+
+    return () => removePolyline;
+  }, [coordsToPolyline]);
 
   const onChange = useCallback(
     debounce((value) => {
@@ -57,6 +69,7 @@ export default function Map({ height, searcher, onResultClick = null } = {}) {
           position: relative;
           height: ${height};
           width: 100%;
+          border-radius: 1rem;
         }
 
         .sidebar {
