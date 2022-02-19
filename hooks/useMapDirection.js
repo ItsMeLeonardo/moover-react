@@ -7,7 +7,6 @@ export const useMapDirection = () => {
 
   const getDirections = ({ from, to }) => {
     actions.startRequest();
-    console.log({ from, to });
 
     getDirectionsService(from, to)
       .then(({ routes }) => {
