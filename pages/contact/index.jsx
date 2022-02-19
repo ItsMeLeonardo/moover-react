@@ -1,6 +1,6 @@
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import axios from "axios";
-import { useState } from "react";
 import {
   Input,
   Card,
@@ -13,8 +13,16 @@ import {
 } from "@nextui-org/react";
 import { Search, Call } from "react-iconly";
 
-export default function Contact({ initialCLients } = {}) {
-  const [clients, setClients] = useState(initialCLients);
+export default function Contact() {
+  const [clients, setClients] = useState();
+
+  useEffect(() => {
+    const res = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/clients`);
+    res.then(({ data }) => {
+      setClients(data.clients);
+    });
+  }, []);
+
   const filterByEmail = (event) => {
     const email = event.target.value;
     if (!email) return setClients(initialCLients);
@@ -24,6 +32,7 @@ export default function Contact({ initialCLients } = {}) {
     });
     setClients(clientFiltered);
   };
+
   return (
     <>
       <Head>
@@ -40,7 +49,7 @@ export default function Contact({ initialCLients } = {}) {
           />
           <Spacer />
           <Grid.Container gap={1}>
-            {clients.map(({ id, phone, email, profile }) => (
+            {clients?.map(({ id, phone, email, profile }) => (
               <Grid xs={12} sm={6} key={id}>
                 <Card clickable bordered css={{ overflow: "hidden", p: "0" }}>
                   <Card.Body>
@@ -85,14 +94,4 @@ export default function Contact({ initialCLients } = {}) {
       `}</style>
     </>
   );
-}
-
-export async function getStaticProps() {
-  const res = await axios.get(`${process.env.API_URL}/clients`);
-  const { clients } = res.data;
-  return {
-    props: {
-      initialCLients: clients,
-    },
-  };
 }
