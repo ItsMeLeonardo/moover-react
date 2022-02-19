@@ -2,9 +2,9 @@ import Head from "next/head";
 import { useReducer, useState } from "react";
 import { Grid, Text, Button, Spacer, Col } from "@nextui-org/react";
 
+import { ChooseRoutes } from "../../components/PlaceOrder/ChooseRoutes";
 import { DeliveryData } from "../../components/PlaceOrder/DeliveryData";
 import { ChooseSize } from "../../components/PlaceOrder/ChooseSize";
-import { ChooseRoutes } from "../../components/PlaceOrder/ChooseRoutes";
 import ModalConfirm from "../../components/PlaceOrder/ModalConfirm";
 
 const ACTIONS = {
@@ -76,13 +76,6 @@ export default function Order() {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleConfirm = () => {
-    alert("Confirm");
-    dispatch({
-      type: ACTIONS.CLEAR,
-    });
-  };
-
   const validateOrder = () => {
     for (const [key, val] of Object.entries(state)) {
       if (val) continue;
@@ -96,11 +89,19 @@ export default function Order() {
     setIsModalOpen(true);
   };
 
+  const handleConfirm = () => {
+    alert("Confirm");
+    dispatch({
+      type: ACTIONS.CLEAR,
+    });
+  };
+
   return (
     <>
       <Head>
         <title>Moover | Order</title>
       </Head>
+
       <Grid.Container
         gap={2}
         justify="center"
@@ -112,6 +113,7 @@ export default function Order() {
             Place your order
           </Text>
         </Grid>
+
         <Grid css={{ w: "100%" }}>
           <DeliveryData
             dispatch={dispatch}
@@ -144,6 +146,7 @@ export default function Order() {
             </Text>
           )}
         </Col>
+
         <ModalConfirm
           state={state}
           visible={isModalOpen}

@@ -14,7 +14,7 @@ import InputSearchWithResults from "../InputSearchWithResults";
 import { useClients } from "../../hooks/useClients";
 
 export function DeliveryData({ dispatch, actions, clientDefault }) {
-  const { isLoading, data, error, getClients } = useClients();
+  const { isLoading, data, getClients } = useClients();
 
   const selectClient = (client) => {
     dispatch({

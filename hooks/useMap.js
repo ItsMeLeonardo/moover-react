@@ -22,6 +22,7 @@ export const useMap = ({ mapContainerRef, lat, lng, zoom = 15 } = {}) => {
     () => map.current.remove();
   }, [mapContainerRef]);
 
+  // to translate map to new coordinates
   const flyToPlace = useCallback((center, zoom = 15) => {
     map.current.flyTo({
       center,
@@ -38,9 +39,12 @@ export const useMap = ({ mapContainerRef, lat, lng, zoom = 15 } = {}) => {
 
   const setPolyline = useCallback((coords) => {
     map.current.on("load", () => {
+      // remove any polyline that might already be on the map
       removePolyline();
+
       const start = coords[0];
 
+      // set start coords
       const bounds = new mapboxgl.LngLatBounds(
         [start[0], start[1]],
         [start[0], start[1]]
@@ -53,7 +57,7 @@ export const useMap = ({ mapContainerRef, lat, lng, zoom = 15 } = {}) => {
         padding: 50,
       });
 
-      //polyline
+      //Define the data for the polyline
       const sourceData = {
         type: "geojson",
 
@@ -69,6 +73,7 @@ export const useMap = ({ mapContainerRef, lat, lng, zoom = 15 } = {}) => {
 
       map.current.addSource(polylineId, sourceData);
 
+      //Define the style for the polyline
       map.current.addLayer({
         id: polylineId,
         type: "line",

@@ -5,6 +5,7 @@ import { Search } from "react-iconly";
 
 import KeywordResult from "./KeywordResults";
 
+// { propToDisplayResult } is the property that has the information to be displayed in the tooltip
 function SearchInput({
   label = "Min 3 characters",
   loading = false,

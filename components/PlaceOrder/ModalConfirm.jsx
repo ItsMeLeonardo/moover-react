@@ -1,5 +1,6 @@
 import { Modal, Text, Row, Button } from "@nextui-org/react";
 
+// { state } is from useReducer
 export default function ModalConfirm({
   visible,
   setVisible,
